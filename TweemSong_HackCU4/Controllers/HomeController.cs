@@ -23,7 +23,8 @@ namespace TweemSong_HackCU4.Controllers
         [Route("/Theme/{username}")]
         public ActionResult Theme(string username)
         {
-            return Content(username);
+            ThemeSong theme = new ThemeSong(username);
+            return Content(theme.GenerateThemeSong());
         }
 
     }
