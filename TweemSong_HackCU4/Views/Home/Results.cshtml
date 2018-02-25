@@ -7,12 +7,23 @@
 
 <html>
 <head>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Shadows+Into+Light" rel="stylesheet">
+    <link rel="Stylesheet" href="~/css/Results.css" type="text/css" />
     <meta name="viewport" content="width=device-width" />
-    <title>Results</title>
-    <h1>@Html.DisplayFor(m => m.Username)</h1>
-    <p>Theme Song: @Html.DisplayFor(m => m.Track.name) by @Html.DisplayFor(m => m.Track.artists.First().name)</p>
-    <img src=@Html.DisplayFor(m => m.Track.album.images.First().url) width="640" height="640" />
 </head>
 <body>
+    <div class="row">
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-8">
+            <h3>Your TwemeSong is...</h3>
+            <h2>@Html.DisplayFor(m => m.Track.artists.First().name)'s</h2>
+            <h1>@Html.DisplayFor(m => m.Track.name)</h1>
+            <iframe src=@Html.DisplayFor(m => m.ListenUrl) width="800" height="80" allowtransparency="true" allow="encrypted-media"></iframe>
+            <br/>
+            <p>Postivity: @Html.DisplayFor(m => m.Sentiment.score) Energy: @Html.DisplayFor(m => m.Sentiment.magnitude)</p>
+        </div>
+    </div>
 </body>
 </html>

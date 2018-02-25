@@ -1,0 +1,36 @@
+﻿body {
+    background: #2980b9;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+}
+
+h1 {
+    letter-spacing: 1px;
+    font-size: 5vh;
+    margin: 0px;
+}
+
+h2 {
+    letter-spacing: 1px;
+    font-size: 3vh;
+    margin: 0px;
+    margin-top: 4%;
+}
+
+h3 {
+    letter-spacing: 1px;
+    font-size: xx-large;
+    font-family: 'Shadows Into Light', cursive;
+}
+
+
+iframe {
+    margin: 10px;
+    border: hidden;
+}
+
+p {
+    font-size: 3vh;
+    margin: 0px;
+}

@@ -18,18 +18,26 @@ namespace TweemSong_HackCU4
     public class ThemeSong
     {
         private string twitterHandle;
+        private DocumentSentiment sentiment;
+        private Track themeSong;
 
         public ThemeSong(string username)
         {
             twitterHandle = username;
+
+            var allTweets = string.Join(' ', GetAllTweets());
+            sentiment = GetSentimentAnalysis(allTweets);
+            themeSong = JsonConvert.DeserializeObject<RootObjectSpotify>(GetSongRecommendations(sentiment)).tracks.First();
         }
 
-        public Track GenerateThemeSong()
+        public DocumentSentiment GetSentiment()
         {
-            var allTweets = string.Join(' ', GetAllTweets());
-            var sentiments = GetSentimentAnalysis(allTweets);
-            var themeSong = JsonConvert.DeserializeObject<RootObjectSpotify>(GetSongRecommendations(sentiments));
-            return themeSong.tracks.First();
+            return sentiment;
+        }
+
+        public Track GetThemeSong()
+        {
+            return themeSong;
         }
 
         private IEnumerable<string> GetAllTweets()

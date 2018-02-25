@@ -9,5 +9,7 @@ namespace TweemSong_HackCU4.Models
     {
         public string Username { get; set; }
         public Track Track { get; set; }
+        public string ListenUrl { get; set; }
+        public DocumentSentiment Sentiment { get; set; }
     }
 }
