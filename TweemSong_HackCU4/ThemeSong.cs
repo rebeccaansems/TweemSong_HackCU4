@@ -83,9 +83,9 @@ namespace TweemSong_HackCU4
 
         private string GetSongRecommendations(DocumentSentiment sentiment)
         {
-            string uri1 = "https://api.spotify.com/v1/recommendations?limit=1&market=US&seed_genres=dance%2Crock%2Cpop%2Cmetal%2Cpunk&target_danceability=";
+            string uri1 = "https://api.spotify.com/v1/recommendations?limit=1&market=US&seed_genres=dance%2Crock%2Cpunk%2Cmetal%2Cpop&target_danceability=";
             string uri2 = "&target_energy=";
-            string uri3 = "&target_instrumentalness=0.3&target_liveness=0.2&target_popularity=75&target_speechiness=0.33&target_valence=";
+            string uri3 = "&target_instrumentalness=0.3&target_liveness=0.2&target_popularity=50&target_speechiness=0.33&target_valence=";
 
             sentiment.magnitude = NumberConversionSentimentsMagnitude(sentiment.magnitude);
             sentiment.score = NumberConversionSentimentsScore(sentiment.score);
@@ -176,7 +176,7 @@ namespace TweemSong_HackCU4
 
         private double NumberConversionSentimentsMagnitude(double num)
         {
-            return Math.Clamp(num / 10, 0, 1);
+            return Math.Clamp(num / 20, 0, 1);
         }
     }
 
