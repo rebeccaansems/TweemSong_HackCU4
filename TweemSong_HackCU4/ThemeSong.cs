@@ -69,10 +69,11 @@ namespace TweemSong_HackCU4
             string uri3 = "&target_instrumentalness=0.3&target_liveness=";
             string uri4 = "&min_popularity=50&target_popularity=75&target_speechiness=0.33&target_valence=";
 
-            string uri = string.Format("{0}{1}{2}{3}{4}{5}{6}{7}", uri1, NumberConversionSentiments(sentiment.magnitude),
-                uri2, NumberConversionSentiments(sentiment.magnitude),
-                uri3, NumberConversionSentiments(sentiment.magnitude),
-                uri4, NumberConversionSentiments(sentiment.score));
+            sentiment.magnitude = NumberConversionSentimentsMagnitude(sentiment.magnitude);
+            sentiment.score = NumberConversionSentimentsScore(sentiment.score);
+
+            string uri = string.Format("{0}{1}{2}{3}{4}{5}{6}{7}", uri1, sentiment.magnitude,
+                uri2, sentiment.magnitude, uri3, sentiment.magnitude, uri4, sentiment.score);
 
             WebHeaderCollection headers = new WebHeaderCollection
             {
@@ -150,9 +151,14 @@ namespace TweemSong_HackCU4
             return rawJson;
         }
 
-        private double NumberConversionSentiments(double num)
+        private double NumberConversionSentimentsScore(double num)
         {
             return Math.Min((num + 1) / 2, 1);
+        }
+
+        private double NumberConversionSentimentsMagnitude(double num)
+        {
+            return Math.Min(num / 10, 1);
         }
     }
 
