@@ -17,12 +17,14 @@
         <div class="col-md-2">
         </div>
         <div class="col-md-8">
-            <h3>Your TwemeSong is...</h3>
+            <h3>@@@Html.DisplayFor(m => m.Username)'s TwemeSong is...</h3>
             <h2>@Html.DisplayFor(m => m.Track.artists.First().name)'s</h2>
             <h1>@Html.DisplayFor(m => m.Track.name)</h1>
             <iframe src=@Html.DisplayFor(m => m.ListenUrl) width="800" height="80" allowtransparency="true" allow="encrypted-media"></iframe>
+            <br />
+            <p>Postivity: @Html.DisplayFor(m => m.Sentiment.score) | Energy: @Html.DisplayFor(m => m.Sentiment.magnitude)</p>
             <br/>
-            <p>Postivity: @Html.DisplayFor(m => m.Sentiment.score) Energy: @Html.DisplayFor(m => m.Sentiment.magnitude)</p>
+            <a href="#" style="color:white;" onclick="history.go(-1)">Try Again</a>
         </div>
     </div>
 </body>

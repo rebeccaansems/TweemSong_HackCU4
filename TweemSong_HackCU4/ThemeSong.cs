@@ -57,6 +57,13 @@ namespace TweemSong_HackCU4
         private DocumentSentiment GetSentimentAnalysis(string text)
         {
             var uri = "https://language.googleapis.com/v1/documents:analyzeSentiment?key=" + Codes.GoogleCloudKey;
+
+            var charsToRemove = new string[] { "@", "\\", "/", "\"" };
+            foreach (var c in charsToRemove)
+            {
+                text = text.Replace(c, string.Empty);
+            }
+
             string json = Post(uri, "{\"document\": {\"type\": \"PLAIN_TEXT\",\"content\": \"" + text + "\"},\"encodingType\": \"UTF8\"}");
             var sentimentObject = JsonConvert.DeserializeObject<RootObjectSentiment>(json);
             return sentimentObject.documentSentiment;
@@ -64,16 +71,15 @@ namespace TweemSong_HackCU4
 
         private string GetSongRecommendations(DocumentSentiment sentiment)
         {
-            string uri1 = "https://api.spotify.com/v1/recommendations?limit=1&market=US&seed_genres=country%2Cdance%2Crock%2Cpop%2Cmetal&target_danceability=";
+            string uri1 = "https://api.spotify.com/v1/recommendations?limit=1&market=US&seed_genres=dance%2Crock%2Cpop%2Cmetal%2Cpunk&target_danceability=";
             string uri2 = "&target_energy=";
-            string uri3 = "&target_instrumentalness=0.3&target_liveness=";
-            string uri4 = "&min_popularity=50&target_popularity=75&target_speechiness=0.33&target_valence=";
+            string uri3 = "&target_instrumentalness=0.3&target_liveness=0.2&target_popularity=75&target_speechiness=0.33&target_valence=";
 
             sentiment.magnitude = NumberConversionSentimentsMagnitude(sentiment.magnitude);
             sentiment.score = NumberConversionSentimentsScore(sentiment.score);
 
-            string uri = string.Format("{0}{1}{2}{3}{4}{5}{6}{7}", uri1, sentiment.magnitude,
-                uri2, sentiment.magnitude, uri3, sentiment.magnitude, uri4, sentiment.score);
+            string uri = string.Format("{0}{1}{2}{3}{4}{5}", uri1, sentiment.magnitude,
+                uri2, sentiment.magnitude, uri3, sentiment.score);
 
             WebHeaderCollection headers = new WebHeaderCollection
             {
@@ -139,7 +145,7 @@ namespace TweemSong_HackCU4
             {
                 streamWriter.Write(json);
             }
-
+            
             string rawJson = "";
             using (var response = (HttpWebResponse)httpWebRequest.GetResponse())
             {
@@ -153,12 +159,12 @@ namespace TweemSong_HackCU4
 
         private double NumberConversionSentimentsScore(double num)
         {
-            return Math.Min((num + 1) / 2, 1);
+            return Math.Clamp((num + 1) / 2, 0, 1);
         }
 
         private double NumberConversionSentimentsMagnitude(double num)
         {
-            return Math.Min(num / 10, 1);
+            return Math.Clamp(num / 10, 0, 1);
         }
     }
 
