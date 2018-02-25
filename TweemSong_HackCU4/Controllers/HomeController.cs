@@ -24,14 +24,15 @@ namespace TweemSong_HackCU4.Controllers
         [HttpPost]
         public IActionResult Results(ThemeModel form)
         {
-            ThemeSong theme = new ThemeSong(form.TwitterHandle);
+            string username = form.TwitterHandle.Replace("@", string.Empty);
+            ThemeSong theme = new ThemeSong(username);
             Track track = theme.GetThemeSong();
 
             if (track != null)
             {
                 ResultsModel results = new ResultsModel()
                 {
-                    Username = form.TwitterHandle,
+                    Username = username,
                     Track = track,
                     ListenUrl = "https://open.spotify.com/embed?uri=spotify:album:" + track.album.id + "&theme=white&view=coverart",
                     Sentiment = theme.GetSentiment()
@@ -42,7 +43,7 @@ namespace TweemSong_HackCU4.Controllers
             {
                 ResultsModel results = new ResultsModel()
                 {
-                    Username = form.TwitterHandle
+                    Username = username
                 };
                 return View("Error", results);
             }
