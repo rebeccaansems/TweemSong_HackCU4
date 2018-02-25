@@ -22,10 +22,15 @@ namespace TweemSong_HackCU4.Controllers
         }
 
         [HttpPost]
-        public IActionResult Theme(ThemeModel form)
+        public IActionResult Results(ThemeModel form)
         {
             ThemeSong theme = new ThemeSong(form.Username);
-            return Content(theme.GenerateThemeSong().artists.ToString());
+            ResultsModel results = new ResultsModel()
+            {
+                Username = form.Username,
+                Track = theme.GenerateThemeSong()
+            };
+            return View(results);
         }
     }
 }

@@ -1,0 +1,18 @@
+﻿@model TweemSong_HackCU4.Models.ResultsModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Results</title>
+    <h1>@Html.DisplayFor(m => m.Username)</h1>
+    <p>Theme Song: @Html.DisplayFor(m => m.Track.name) by @Html.DisplayFor(m => m.Track.artists.First().name)</p>
+    <img src=@Html.DisplayFor(m => m.Track.album.images.First().url) width="640" height="640" />
+</head>
+<body>
+</body>
+</html>
