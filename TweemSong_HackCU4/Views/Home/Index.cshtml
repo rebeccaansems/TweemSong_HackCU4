@@ -1,4 +1,5 @@
-﻿@{
+﻿@model TweemSong_HackCU4.Models.ThemeModel
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -7,8 +8,9 @@
     </div>
     <div class="col-md-4">
         <h2>Enter Twitter Handle</h2>
-        <form action="/Results" method="post">
-            <input type="text" name="username" />
+        <form asp-controller="Home"
+              asp-action="Theme" method="post">
+            @Html.EditorForModel()
             <input type="submit" value="Submit" />
         </form>
     </div>
