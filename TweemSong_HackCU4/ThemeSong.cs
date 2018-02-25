@@ -12,6 +12,7 @@ using System.Net.Http.Headers;
 using System;
 using System.Text;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 
 namespace TweemSong_HackCU4
 {
@@ -58,6 +59,7 @@ namespace TweemSong_HackCU4
         {
             var uri = "https://language.googleapis.com/v1/documents:analyzeSentiment?key=" + Codes.GoogleCloudKey;
 
+            text = Regex.Replace(text, @"http[^\s]+", "");
             var charsToRemove = new string[] { "@", "\\", "/", "\"" };
             foreach (var c in charsToRemove)
             {
