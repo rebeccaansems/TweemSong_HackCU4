@@ -24,10 +24,10 @@ namespace TweemSong_HackCU4.Controllers
         [HttpPost]
         public IActionResult Results(ThemeModel form)
         {
-            ThemeSong theme = new ThemeSong(form.Username);
+            ThemeSong theme = new ThemeSong(form.TwitterHandle);
             ResultsModel results = new ResultsModel()
             {
-                Username = form.Username,
+                Username = form.TwitterHandle,
                 Track = theme.GenerateThemeSong()
             };
             return View(results);

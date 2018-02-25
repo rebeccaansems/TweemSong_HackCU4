@@ -1,35 +1,47 @@
 ﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+    background: #2980b9;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+    position: relative;
 }
 
-/* Wrapping element */
-/* Set some basic padding to keep content from hitting the edges */
-.body-content {
-    padding-left: 15px;
-    padding-right: 15px;
-}
-
-/* Carousel */
-.carousel-caption p {
-    font-size: 20px;
-    line-height: 1.4;
-}
-
-/* Make .svg files in the carousel display properly in older browsers */
-.carousel-inner .item img[src$=".svg"] {
-    width: 100%;
-}
-
-/* QR code generator */
-#qrCode {
-    margin: 15px;
-}
-
-/* Hide/rearrange for smaller screens */
-@media screen and (max-width: 767px) {
-    /* Hide captions */
-    .carousel-caption {
-        display: none;
+    body .row {
+        position: absolute;
+        top: 47%;
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
+
+h2 {
+    letter-spacing: 1px;
+    font-size: xx-large;
+    font-family: 'Shadows Into Light', cursive;
+    margin-bottom: 10px;
+}
+
+input[type=text] {
+    height: 30vh;
+    width: 80vw;
+    color: #ecf0f1;
+    font-size: 15vh;
+    padding-left: 20px;
+    border: 2px dotted #ecf0f1;
+    background: #2980b9;
+    text-transform: uppercase;
+    text-align: center
+}
+
+input[type=submit] {
+    height: 15vh;
+    width: 100%;
+    font-size: 7vh;
+    color: #2980b9;
+    background: #ecf0f1;
+    border: hidden;
+    text-transform: uppercase;
+}
+
+::placeholder {
+    color: #3498db;
 }

@@ -26,7 +26,7 @@ namespace TweemSong_HackCU4
 
         public Track GenerateThemeSong()
         {
-            var allTweets = string.Join(' ',GetAllTweets());
+            var allTweets = string.Join(' ', GetAllTweets());
             var sentiments = GetSentimentAnalysis(allTweets);
             var themeSong = JsonConvert.DeserializeObject<RootObjectSpotify>(GetSongRecommendations(sentiments));
             return themeSong.tracks.First();
@@ -66,8 +66,10 @@ namespace TweemSong_HackCU4
                 uri3, NumberConversionSentiments(sentiment.magnitude),
                 uri4, NumberConversionSentiments(sentiment.score));
 
-            WebHeaderCollection headers = new WebHeaderCollection();
-            headers.Add("Authorization", "Authorization: Bearer " + GetSpotifyToken().Result);
+            WebHeaderCollection headers = new WebHeaderCollection
+            {
+                { "Authorization", "Authorization: Bearer " + GetSpotifyToken().Result }
+            };
             return Get(uri, headers).Result;
         }
 
@@ -104,7 +106,7 @@ namespace TweemSong_HackCU4
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
             request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
-            if(headers != null)
+            if (headers != null)
             {
                 request.Headers = headers;
             }
