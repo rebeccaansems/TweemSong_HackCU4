@@ -1,0 +1,25 @@
+﻿@model TweemSong_HackCU4.Models.ResultsModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Shadows+Into+Light" rel="stylesheet">
+    <link rel="Stylesheet" href="~/css/Results.css" type="text/css" />
+    <meta name="viewport" content="width=device-width" />
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-8">
+            <h2>@@@Html.DisplayFor(m => m.Username) does not exist</h2>
+            <a href="#" style="color:white;" onclick="history.go(-1)">Try Again</a>
+        </div>
+    </div>
+</body>
+</html>

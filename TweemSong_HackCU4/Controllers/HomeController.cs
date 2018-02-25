@@ -26,14 +26,26 @@ namespace TweemSong_HackCU4.Controllers
         {
             ThemeSong theme = new ThemeSong(form.TwitterHandle);
             Track track = theme.GetThemeSong();
-            ResultsModel results = new ResultsModel()
+
+            if (track != null)
             {
-                Username = form.TwitterHandle,
-                Track = track,
-                ListenUrl = "https://open.spotify.com/embed?uri=spotify:album:" + track.album.id + "&theme=white&view=coverart",
-                Sentiment = theme.GetSentiment()
-            };
-            return View(results);
+                ResultsModel results = new ResultsModel()
+                {
+                    Username = form.TwitterHandle,
+                    Track = track,
+                    ListenUrl = "https://open.spotify.com/embed?uri=spotify:album:" + track.album.id + "&theme=white&view=coverart",
+                    Sentiment = theme.GetSentiment()
+                };
+                return View(results);
+            }
+            else
+            {
+                ResultsModel results = new ResultsModel()
+                {
+                    Username = form.TwitterHandle
+                };
+                return View("Error", results);
+            }
         }
     }
 }

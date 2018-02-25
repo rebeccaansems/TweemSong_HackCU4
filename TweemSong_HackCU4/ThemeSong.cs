@@ -26,9 +26,13 @@ namespace TweemSong_HackCU4
         {
             twitterHandle = username;
 
-            var allTweets = string.Join(' ', GetAllTweets());
-            sentiment = GetSentimentAnalysis(allTweets);
-            themeSong = JsonConvert.DeserializeObject<RootObjectSpotify>(GetSongRecommendations(sentiment)).tracks.First();
+            var allTweets = GetAllTweets();
+            if (allTweets != null)
+            {
+                string combinedTweets = string.Join(' ', GetAllTweets());
+                sentiment = GetSentimentAnalysis(combinedTweets);
+                themeSong = JsonConvert.DeserializeObject<RootObjectSpotify>(GetSongRecommendations(sentiment)).tracks.First();
+            }
         }
 
         public DocumentSentiment GetSentiment()
@@ -52,7 +56,13 @@ namespace TweemSong_HackCU4
                 ScreenName = twitterHandle
             };
 
-            return service.ListTweetsOnUserTimeline(options).Select(x => x.Text);
+            var tweets = service.ListTweetsOnUserTimeline(options);
+
+            if (tweets == null)
+            {
+                return null;
+            }
+            return tweets.Select(x => x.Text);
         }
 
         private DocumentSentiment GetSentimentAnalysis(string text)
@@ -147,7 +157,7 @@ namespace TweemSong_HackCU4
             {
                 streamWriter.Write(json);
             }
-            
+
             string rawJson = "";
             using (var response = (HttpWebResponse)httpWebRequest.GetResponse())
             {
