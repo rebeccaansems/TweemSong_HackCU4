@@ -6,6 +6,12 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using TweetSharp;
+using SpotifyAPI.Web;
+using SpotifyAPI.Web.Auth;
+using System.Net.Http.Headers;
+using System;
+using System.Text;
+using System.Net.Http;
 
 namespace TweemSong_HackCU4
 {
@@ -18,11 +24,12 @@ namespace TweemSong_HackCU4
             twitterHandle = username;
         }
 
-        public async Task<string> GenerateThemeSong()
+        public string GenerateThemeSong()
         {
-            var allTweets = GetAllTweets();
+            var allTweets = string.Join(' ',GetAllTweets());
+            var sentiments = GetSentimentAnalysis(allTweets);
 
-            return SentimentAnalysis(allTweets.First()).magnitude.ToString();
+            return GetSongRecommendations(sentiments);
         }
 
         private IEnumerable<string> GetAllTweets()
@@ -39,23 +46,68 @@ namespace TweemSong_HackCU4
             return service.ListTweetsOnUserTimeline(options).Select(x => x.Text);
         }
 
-        private DocumentSentiment SentimentAnalysis(string text)
+        private DocumentSentiment GetSentimentAnalysis(string text)
         {
             var uri = "https://language.googleapis.com/v1/documents:analyzeSentiment?key=" + Codes.GoogleCloudKey;
             string json = Post(uri, "{\"document\": {\"type\": \"PLAIN_TEXT\",\"content\": \"" + text + "\"},\"encodingType\": \"UTF8\"}");
-            var obj = JsonConvert.DeserializeObject<RootObject>(json);
-            return obj.documentSentiment;
+            var sentimentObject = JsonConvert.DeserializeObject<RootObject>(json);
+            return sentimentObject.documentSentiment;
+        }
 
+        private string GetSongRecommendations(DocumentSentiment sentiment)
+        {
+            string uri1 = "https://api.spotify.com/v1/recommendations?limit=1&market=US&seed_genres=country%2Cdance%2Crock%2Cpop%2Cmetal&target_danceability=";
+            string uri2 = "&target_energy=";
+            string uri3 = "&target_instrumentalness=0.3&target_liveness=";
+            string uri4 = "&min_popularity=50&target_popularity=75&target_speechiness=0.33&target_valence=";
+
+            string uri = string.Format("{0}{1}{2}{3}{4}{5}{6}{7}", uri1, NumberConversionSentiments(sentiment.magnitude),
+                uri2, NumberConversionSentiments(sentiment.magnitude),
+                uri3, NumberConversionSentiments(sentiment.magnitude),
+                uri4, NumberConversionSentiments(sentiment.score));
+
+            WebHeaderCollection headers = new WebHeaderCollection();
+            headers.Add("Authorization", "Authorization: Bearer " + GetSpotifyToken().Result);
+            return Get(uri, headers).Result;
+        }
+
+        private static async Task<string> GetSpotifyToken()
+        {
+            string credentials = String.Format("{0}:{1}", Codes.SpotifyClientID, Codes.SpotifyClientSecret);
+
+            using (var client = new HttpClient())
+            {
+                //Define Headers
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes(credentials)));
+
+                //Prepare Request Body
+                List<KeyValuePair<string, string>> requestData = new List<KeyValuePair<string, string>>();
+                requestData.Add(new KeyValuePair<string, string>("grant_type", "client_credentials"));
+
+                FormUrlEncodedContent requestBody = new FormUrlEncodedContent(requestData);
+
+                //Request Token
+                var request = await client.PostAsync("https://accounts.spotify.com/api/token", requestBody);
+                var response = await request.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<AccessToken>(response).access_token;
+            }
         }
 
 
         //Helper Methods
 
         //FROM https://stackoverflow.com/questions/27108264/c-sharp-how-to-properly-make-a-http-web-get-request
-        public async Task<string> Get(string uri)
+        private async Task<string> Get(string uri, WebHeaderCollection headers = null)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
             request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+            if(headers != null)
+            {
+                request.Headers = headers;
+            }
 
             using (HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync())
             using (Stream stream = response.GetResponseStream())
@@ -66,7 +118,7 @@ namespace TweemSong_HackCU4
         }
 
         //FROM https://stackoverflow.com/questions/3735988/how-to-post-raw-data-using-c-sharp-httpwebrequest
-        public static string Post(string url, string json)
+        private string Post(string url, string json)
         {
             var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
             httpWebRequest.ContentType = "application/json";
@@ -87,6 +139,11 @@ namespace TweemSong_HackCU4
             }
             return rawJson;
         }
+
+        private double NumberConversionSentiments(double num)
+        {
+            return Math.Min((num + 1) / 2, 1);
+        }
     }
 
     //Sentiment Objects
@@ -99,5 +156,13 @@ namespace TweemSong_HackCU4
     public class RootObject
     {
         public DocumentSentiment documentSentiment { get; set; }
+    }
+
+    //Spotify Objects
+    class AccessToken
+    {
+        public string access_token { get; set; }
+        public string token_type { get; set; }
+        public long expires_in { get; set; }
     }
 }
