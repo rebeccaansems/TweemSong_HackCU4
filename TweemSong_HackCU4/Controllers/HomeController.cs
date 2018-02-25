@@ -48,5 +48,33 @@ namespace TweemSong_HackCU4.Controllers
                 return View("Error", results);
             }
         }
+
+        [Route("Home/Results/{username}")]
+        public IActionResult Results(string username)
+        {
+            username = username.Replace("@", string.Empty);
+            ThemeSong theme = new ThemeSong(username);
+            Track track = theme.GetThemeSong();
+
+            if (track != null)
+            {
+                ResultsModel results = new ResultsModel()
+                {
+                    Username = username,
+                    Track = track,
+                    ListenUrl = "https://open.spotify.com/embed?uri=spotify:album:" + track.album.id + "&theme=white&view=coverart",
+                    Sentiment = theme.GetSentiment()
+                };
+                return View(results);
+            }
+            else
+            {
+                ResultsModel results = new ResultsModel()
+                {
+                    Username = username
+                };
+                return View("Error", results);
+            }
+        }
     }
 }
