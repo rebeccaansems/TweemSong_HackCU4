@@ -20,10 +20,12 @@
             <h3>@@@Html.DisplayFor(m => m.Username)'s TwemeSong is...</h3>
             <h2>@Html.DisplayFor(m => m.Track.artists.First().name)'s</h2>
             <h1>@Html.DisplayFor(m => m.Track.name)</h1>
-            <iframe src=@Html.DisplayFor(m => m.ListenUrl) width="800" height="80" allowtransparency="true" allow="encrypted-media"></iframe>
+            <div style='width: 100%; height: 80px; margin: auto;'>
+                <iframe src=@Html.DisplayFor(m => m.ListenUrl) allowtransparency="true" allow="encrypted-media" style="width: 80%; height: 100%;"></iframe>
+            </div>
             <br />
             <p>Postivity: @Html.DisplayFor(m => m.Sentiment.score) | Energy: @Html.DisplayFor(m => m.Sentiment.magnitude)</p>
-            <br/>
+            <br />
             <a href="#" style="color:white;" onclick="history.go(-1)">Try Again</a>
         </div>
     </div>
