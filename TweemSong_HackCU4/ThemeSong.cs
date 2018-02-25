@@ -24,12 +24,12 @@ namespace TweemSong_HackCU4
             twitterHandle = username;
         }
 
-        public string GenerateThemeSong()
+        public Track GenerateThemeSong()
         {
             var allTweets = string.Join(' ',GetAllTweets());
             var sentiments = GetSentimentAnalysis(allTweets);
-
-            return GetSongRecommendations(sentiments);
+            var themeSong = JsonConvert.DeserializeObject<RootObjectSpotify>(GetSongRecommendations(sentiments));
+            return themeSong.tracks.First();
         }
 
         private IEnumerable<string> GetAllTweets()
@@ -50,7 +50,7 @@ namespace TweemSong_HackCU4
         {
             var uri = "https://language.googleapis.com/v1/documents:analyzeSentiment?key=" + Codes.GoogleCloudKey;
             string json = Post(uri, "{\"document\": {\"type\": \"PLAIN_TEXT\",\"content\": \"" + text + "\"},\"encodingType\": \"UTF8\"}");
-            var sentimentObject = JsonConvert.DeserializeObject<RootObject>(json);
+            var sentimentObject = JsonConvert.DeserializeObject<RootObjectSentiment>(json);
             return sentimentObject.documentSentiment;
         }
 
@@ -153,7 +153,7 @@ namespace TweemSong_HackCU4
         public double score { get; set; }
     }
 
-    public class RootObject
+    public class RootObjectSentiment
     {
         public DocumentSentiment documentSentiment { get; set; }
     }
@@ -164,5 +164,95 @@ namespace TweemSong_HackCU4
         public string access_token { get; set; }
         public string token_type { get; set; }
         public long expires_in { get; set; }
+    }
+
+    public class ExternalUrls
+    {
+        public string spotify { get; set; }
+    }
+
+    public class Artist
+    {
+        public ExternalUrls external_urls { get; set; }
+        public string href { get; set; }
+        public string id { get; set; }
+        public string name { get; set; }
+        public string type { get; set; }
+        public string uri { get; set; }
+    }
+
+    public class ExternalUrls2
+    {
+        public string spotify { get; set; }
+    }
+
+    public class Image
+    {
+        public int height { get; set; }
+        public string url { get; set; }
+        public int width { get; set; }
+    }
+
+    public class Album
+    {
+        public string album_type { get; set; }
+        public List<Artist> artists { get; set; }
+        public ExternalUrls2 external_urls { get; set; }
+        public string href { get; set; }
+        public string id { get; set; }
+        public List<Image> images { get; set; }
+        public string name { get; set; }
+        public string type { get; set; }
+        public string uri { get; set; }
+    }
+
+    public class ExternalUrls3
+    {
+        public string spotify { get; set; }
+    }
+
+    public class Artist2
+    {
+        public ExternalUrls3 external_urls { get; set; }
+        public string href { get; set; }
+        public string id { get; set; }
+        public string name { get; set; }
+        public string type { get; set; }
+        public string uri { get; set; }
+    }
+
+    public class ExternalIds
+    {
+        public string isrc { get; set; }
+    }
+
+    public class ExternalUrls4
+    {
+        public string spotify { get; set; }
+    }
+
+    public class Track
+    {
+        public Album album { get; set; }
+        public List<Artist2> artists { get; set; }
+        public int disc_number { get; set; }
+        public int duration_ms { get; set; }
+        public bool @explicit { get; set; }
+        public ExternalIds external_ids { get; set; }
+        public ExternalUrls4 external_urls { get; set; }
+        public string href { get; set; }
+        public string id { get; set; }
+        public bool is_playable { get; set; }
+        public string name { get; set; }
+        public int popularity { get; set; }
+        public string preview_url { get; set; }
+        public int track_number { get; set; }
+        public string type { get; set; }
+        public string uri { get; set; }
+    }
+
+    public class RootObjectSpotify
+    {
+        public List<Track> tracks { get; set; }
     }
 }

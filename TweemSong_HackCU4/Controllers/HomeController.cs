@@ -24,7 +24,7 @@ namespace TweemSong_HackCU4.Controllers
         public ActionResult Theme(string username)
         {
             ThemeSong theme = new ThemeSong(username);
-            return Content(theme.GenerateThemeSong());
+            return Content(theme.GenerateThemeSong().artists.ToString());
         }
 
     }
